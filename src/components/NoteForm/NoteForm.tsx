@@ -1,9 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from 'formik';
-import * as Yup from 'yup';
-import { createNote } from '../../services/noteService';
-import type { NoteTag } from '../../types/note';
-import css from './NoteForm.module.css';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from "formik";
+import * as Yup from "yup";
+import { createNote } from "../../services/noteService";
+import type { NoteTag } from "../../types/note";
+import css from "./NoteForm.module.css";
 
 interface NoteFormProps {
   onClose: () => void;
@@ -16,20 +16,20 @@ interface DefaultFormDataProps {
 }
 
 const defaultFormData: DefaultFormDataProps = {
-  title: '',
-  content: '',
-  tag: 'Todo',
+  title: "",
+  content: "",
+  tag: "Todo",
 };
 
 const NoteFormSchema = Yup.object().shape({
   title: Yup.string()
-    .min(3, 'Title must be at least 3 characters')
-    .max(50, 'Title is too long')
-    .required('Title is required'),
-  content: Yup.string().max(500, 'Content is too long'),
+    .min(3, "Title must be at least 3 characters")
+    .max(50, "Title is too long")
+    .required("Title is required"),
+  content: Yup.string().max(500, "Content is too long"),
   tag: Yup.string()
-    .oneOf(['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'])
-    .required('Please choose your tag'),
+    .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"])
+    .required("Please choose your tag"),
 });
 
 const NoteForm = ({ onClose }: NoteFormProps) => {
@@ -38,19 +38,19 @@ const NoteForm = ({ onClose }: NoteFormProps) => {
   const mutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notes'] });
-      onClose();
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+      onClose(); 
     },
   });
 
   const handleSubmit = (
     values: DefaultFormDataProps,
-    formikHeelpers: FormikHelpers<DefaultFormDataProps>
+    formikHelpers: FormikHelpers<DefaultFormDataProps> // 
   ) => {
     mutation.mutate(values);
-    formikHeelpers.resetForm();
-    onClose();
+    formikHelpers.resetForm(); 
   };
+
   return (
     <Formik
       initialValues={defaultFormData}
@@ -61,17 +61,8 @@ const NoteForm = ({ onClose }: NoteFormProps) => {
         <Form className={css.form}>
           <div className={css.formGroup}>
             <label htmlFor="title">Title</label>
-            <Field
-              id="title"
-              type="text"
-              name="title"
-              className={css.input}
-            />
-            <ErrorMessage
-              name="title"
-              component="span"
-              className={css.error}
-            />
+            <Field id="title" type="text" name="title" className={css.input} />
+            <ErrorMessage name="title" component="span" className={css.error} />
           </div>
 
           <div className={css.formGroup}>
@@ -92,12 +83,7 @@ const NoteForm = ({ onClose }: NoteFormProps) => {
 
           <div className={css.formGroup}>
             <label htmlFor="tag">Tag</label>
-            <Field
-              as="select"
-              id="tag"
-              name="tag"
-              className={css.select}
-            >
+            <Field as="select" id="tag" name="tag" className={css.select}>
               <option value="Todo">Todo</option>
               <option value="Work">Work</option>
               <option value="Personal">Personal</option>
@@ -105,11 +91,7 @@ const NoteForm = ({ onClose }: NoteFormProps) => {
               <option value="Shopping">Shopping</option>
             </Field>
 
-            <ErrorMessage
-              name="tag"
-              component="span"
-              className={css.error}
-            />
+            <ErrorMessage name="tag" component="span" className={css.error} />
           </div>
 
           <div className={css.actions}>
